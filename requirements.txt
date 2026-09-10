@@ -1,0 +1,11 @@
+# The package itself needs only the standard library.
+#
+# SciPy is optional: track_audit.admission uses scipy.optimize.linear_sum_assignment
+# when it is importable and falls back to an exact brute-force assignment
+# otherwise. Install it for realistically sized per-frame problems.
+#
+# pytest is needed only to run the test suite.
+
+pytest>=7.0
+scipy>=1.7 ; python_version >= "3.9"
+numpy>=1.21 ; python_version >= "3.9"

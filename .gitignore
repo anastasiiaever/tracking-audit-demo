@@ -1,0 +1,40 @@
+# Byte-compiled
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Test and tooling caches
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.tox/
+
+# Environments
+.venv/
+venv/
+env/
+.python-version
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
+*.swp
+
+# This repository ships synthetic data only. Do not commit corpora,
+# model weights or run outputs.
+data/
+datasets/
+checkpoints/
+outputs/
+*.pth
+*.pt
+*.pkl
+*.tar
+*.zip
+*.mp4
+*.avi
