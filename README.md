@@ -39,7 +39,7 @@ Roughly 700 lines of library code and 104 tests.
 Python 3.9 or newer. No install step is required.
 
 ```bash
-git clone <this repository>
+git clone https://github.com/anastasiiaever/tracking-audit-demo.git
 cd tracking-audit-demo
 pip install -r requirements.txt
 
