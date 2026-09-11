@@ -57,12 +57,21 @@ def _assign_one_to_one(cost: List[List[float]]) -> List[Tuple[int, int]]:
     except Exception:
         import itertools
         n, m = len(cost), len(cost[0])
+        # Exactly min(n, m) pairs. When rows outnumber columns the search runs
+        # over row subsets, otherwise over column subsets; taking the first n
+        # rows would ignore cheaper assignments available to later rows.
+        if n <= m:
+            candidates = ([(i, cols[i]) for i in range(n)]
+                          for cols in itertools.permutations(range(m), n))
+        else:
+            candidates = ([(rows[j], j) for j in range(m)]
+                          for rows in itertools.permutations(range(n), m))
         best, pairs = None, []
-        for perm in itertools.permutations(range(m), min(n, m)):
-            total = sum(cost[i][perm[i]] for i in range(len(perm)))
+        for candidate in candidates:
+            total = sum(cost[i][j] for i, j in candidate)
             if best is None or total < best:
                 best = total
-                pairs = [(i, perm[i]) for i in range(len(perm))]
+                pairs = candidate
         return pairs
 
 
