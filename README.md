@@ -98,14 +98,14 @@ Pairing them is only licensed when exactly one of each occurs at the same frame
 with identical geometry; every other configuration is counted as ambiguous
 rather than resolved by a heuristic.
 
-**Non-row-additive operators.** An operator that rewrites
-values its own fit consumes has no row-subset decomposition — removing a subset
-of the rows it produced would change the rows it kept. `assert_row_additive`
+**Non-row-additive operators.** An operator that rewrites values its own fit
+consumes has no row-subset decomposition: removing a subset of the rows it
+produced would change the rows it kept. `assert_row_additive`
 raises, and `states.undefined_for_non_row_additive` returns
 `STRUCTURALLY_UNDEFINED` with a reason instead of synthesizing a number.
 
-**Two denominators.** A large non-admitted fraction *of the inserted
-rows* is a different statement from a large fraction *of the submission*.
+**Two denominators.** A large non-admitted fraction *of the inserted rows* is a
+different statement from a large fraction *of the submission*.
 `materiality.classify` returns both, and an empty denominator yields `UNDEFINED`
 rather than `0.0`.
 

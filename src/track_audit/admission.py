@@ -17,13 +17,12 @@ ANCHOR_ID_MISMATCH = "ANCHOR_ID_MISMATCH"
 TARGET_REFERENCE_ABSENT = "TARGET_REFERENCE_ABSENT"
 ADMITTED = "ADMITTED"
 
-#: Evaluated in this order, so a row with one unresolvable anchor is never also
-#: counted as a mismatch. The four classes are exhaustive and mutually exclusive.
+# Evaluated in this order, so a row with one unresolvable anchor is never also
+# counted as a mismatch. The four classes are exhaustive and mutually exclusive.
 CLASSES: Tuple[str, ...] = (ANCHOR_UNMATCHED, ANCHOR_ID_MISMATCH,
                             TARGET_REFERENCE_ABSENT, ADMITTED)
 
-#: What each class does and does not license. Non-admission is a statement about
-#: a matching rule, not a demonstrated error.
+# Non-admission is a statement about a matching rule, not a demonstrated error.
 CLASS_MEANING = {
     ANCHOR_UNMATCHED:
         "at least one bracketing observation matched no scoreable reference; "

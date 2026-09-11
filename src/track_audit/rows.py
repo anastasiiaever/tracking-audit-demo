@@ -8,14 +8,13 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Dict, List, Tuple
 
-RowId = Tuple[str, int, int]          # (sequence, frame, track_id)
+RowId = Tuple[str, int, int]  # (sequence, frame, track_id)
 
-#: Fields an evaluator is assumed not to read. Changing one of these is a
-#: metadata normalisation rather than a change of scored content. Callers that
-#: know their evaluator reads a field should not treat it as non-evaluated.
+# Fields treated as non-evaluated metadata.
+# Adjust this list to match the evaluator.
 NON_EVALUATED_FIELDS = ("score",)
 
-#: Tolerance for round-tripping coordinates through a text writer.
+# Coordinate tolerance used when comparing parsed rows.
 COORD_TOL = 1e-6
 
 
@@ -53,9 +52,8 @@ def parse_rows(text: str, sequence: str) -> Dict[RowId, Row]:
 
     Column order is ``frame, track_id, x, y, w, h[, score, class, ...]``.
 
-    A repeated identity is an error, not something to silently resolve: a state
-    in which one row identity appears twice has no well-defined membership, and
-    every downstream set operation would be arbitrary.
+    A repeated identity raises ``DuplicateRowIdentity``: a state in which one
+    row identity appears twice has no well-defined membership.
     """
     out: Dict[RowId, Row] = {}
     for raw in text.splitlines():
@@ -84,8 +82,7 @@ def parse_reference(text: str, sequence: str, scoreable_only: bool = True) -> Li
     are kept.
 
     The result is a list, not a dict: a reference may legitimately repeat a
-    ``(frame, track_id)`` pair — for instance across overlapping ignore regions —
-    so reference rows are not assumed to have unique identity.
+    ``(frame, track_id)`` pair, for instance across overlapping ignore regions.
     """
     rows: List[Row] = []
     for raw in text.splitlines():

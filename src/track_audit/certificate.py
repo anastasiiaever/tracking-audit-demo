@@ -7,9 +7,7 @@ from typing import Any, Dict
 
 SCHEMA_VERSION = "track-audit/certificate/1"
 
-#: Fields every certificate must carry. A missing field is an error rather than
-#: a silent ``null``: an audit that cannot say which gate it used has not
-#: recorded its own configuration.
+# Required fields. A missing field raises rather than serialising a null.
 REQUIRED = (
     "schema_version",
     "sequence",
@@ -21,8 +19,7 @@ REQUIRED = (
     "reason_codes",
 )
 
-#: Present only when the caller has them. Their absence keeps the content hash
-#: of a minimal certificate stable.
+# Emitted only when supplied, so a minimal certificate keeps a stable hash.
 OPTIONAL = ("metric_table", "ordering", "notes")
 
 
@@ -53,6 +50,6 @@ def build(**kw: Any) -> Dict[str, Any]:
 
 
 def serialize(content: Dict[str, Any]) -> str:
-    """Deterministic bytes: identical content gives identical bytes and hash."""
+    """Serialise content together with its SHA-256 content hash."""
     return canonical_json({"content": content,
                            "content_sha256": content_hash(content)})

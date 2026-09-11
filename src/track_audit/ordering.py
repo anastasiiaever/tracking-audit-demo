@@ -45,8 +45,7 @@ def matrix(before: Dict[str, Dict[str, float]],
     """Every unordered pair of systems, on every metric, at both states.
 
     A metric missing for either system in a pair is reported as
-    ``METRIC_NOT_AVAILABLE`` and never imputed: an absent number is a different
-    thing from a number that happens to be equal.
+    ``METRIC_NOT_AVAILABLE`` and never imputed.
     """
     rows: List[dict] = []
     for i in range(len(systems)):

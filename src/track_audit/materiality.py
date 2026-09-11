@@ -18,8 +18,7 @@ def classify(non_admitted: int, synthesized: int, submitted_rows: int,
     """Classify a composition and return both rates.
 
     ``synthesized == 0`` yields ``UNDEFINED`` rather than zero: a conditional
-    fraction with an empty denominator has no value, and reporting ``0.0`` would
-    claim the composition was measured and found clean.
+    fraction with an empty denominator has no value.
     """
     if synthesized < 0 or non_admitted < 0 or submitted_rows < 0:
         raise ValueError("counts must be non-negative")

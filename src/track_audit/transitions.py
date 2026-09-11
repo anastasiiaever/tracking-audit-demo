@@ -53,7 +53,7 @@ def inventory(observed: Dict[RowId, Row], submitted: Dict[RowId, Row]) -> Transi
         d = del_by_frame.get(frame_key, [])
         i = ins_by_frame.get(frame_key, [])
         if not d:
-            continue                       # pure insertion: not an id rewrite
+            continue  # pure insertion: not an id rewrite
         if len(d) == 1 and len(i) == 1 and observed[d[0]].coords_equal(submitted[i[0]]):
             unique_rewrites += 1
         else:

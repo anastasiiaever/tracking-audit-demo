@@ -45,10 +45,10 @@ SUBMITTED = """\
 3,3,700,100,40,80
 """
 
-# Reference:
-#   identity 1 is continuous               -> track 1 is genuinely bridgeable
-#   identity 2 leaves, identity 9 arrives   -> track 2 bridges an identity change
-#   identity 3 is absent at frame 2         -> track 3 has no support where filled
+# Synthetic reference cases:
+# identity 1 stays continuous
+# identity 2 changes to identity 9
+# identity 3 is missing at frame 2
 REFERENCE = """\
 1,1,100,100,40,80,1,1
 2,1,120,100,40,80,1,1
