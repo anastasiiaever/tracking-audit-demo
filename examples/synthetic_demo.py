@@ -1,15 +1,12 @@
 #!/usr/bin/env python3
-"""The whole audit on twelve synthetic rows.
+"""Synthetic end-to-end example for track_audit.
 
+The example uses three short tracks and a synthetic reference to exercise
+state transitions, admission classes, ordering changes, and certificate
+generation.
+
+Run with:
     python examples/synthetic_demo.py
-
-Every number printed here is computed from the synthetic strings defined below.
-Nothing is read from disk and nothing is downloaded.
-
-The scenario: a tracker observed three tracks intermittently. A post-processor
-filled every gap by interpolation. Against the synthetic reference, one gap is
-genuine, one bridges an identity change, and one has no reference support at the
-filled frame — so the three synthesized rows land in three different classes.
 """
 from __future__ import annotations
 
@@ -21,7 +18,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 from track_audit import (build_admitted, certificate, classify, inventory,
                          materiality, ordering, parse_reference, parse_rows,
                          partition_counts)
-from track_audit.admission import CLASS_MEANING, DEFAULT_IOU_GATE, CLASSES
+from track_audit.admission import CLASSES, DEFAULT_IOU_GATE
 
 SEQUENCE = "SYNTH-01"
 
@@ -73,7 +70,7 @@ def main() -> int:
     print(f"observed rows  : {len(observed)}")
     print(f"submitted rows : {len(submitted)}")
 
-    # ---- 1. what changed, and is it row-additive at all? ------------------
+    # State transition
     t = inventory(observed, submitted)
     print(f"\ninserted {t.inserted_rows}, deleted {t.deleted_rows}, "
           f"coordinate rewrites {t.rewritten_coordinate_rows}")
@@ -82,7 +79,7 @@ def main() -> int:
 
     synthesized = sorted(set(submitted) - set(observed))
 
-    # ---- 2. does each synthesized row describe a continuous object? -------
+    # Reference consistency
     classes = classify(synthesized, list(observed.values()), reference,
                        gate=DEFAULT_IOU_GATE)
     print(f"\nadmission at gate {DEFAULT_IOU_GATE}:")
@@ -101,13 +98,13 @@ def main() -> int:
           f"produced, {verdict['fraction_of_submitted']:.1%} of the submission)")
     print(f"  verdict: {verdict['classification']} ({verdict['status']})")
 
-    # ---- 3. the intermediate state ---------------------------------------
+    # Admitted state
     admitted = build_admitted(observed, submitted, classes)
     print(f"\nadmitted state: {len(admitted)} rows "
           f"(observed {len(observed)} <= admitted {len(admitted)} <= submitted "
           f"{len(submitted)})")
 
-    # ---- 4. what an ordering does between two states ---------------------
+    # Ordering changes
     # Illustrative metric tables: three systems, one metric, before and after.
     before = {"alpha": {"score": 70.10}, "beta": {"score": 70.02}, "gamma": {"score": 66.40}}
     after = {"alpha": {"score": 71.05}, "beta": {"score": 71.30}, "gamma": {"score": 67.90}}
@@ -120,7 +117,7 @@ def main() -> int:
               f"(margin {r['margin_before']:+.2f} -> {r['margin_after']:+.2f})")
     print(f"  smallest margin before: {ordering.smallest_margin(rows):.2f}")
 
-    # ---- 5. a deterministic record ---------------------------------------
+    # Reproducibility certificate
     cert = certificate.build(
         sequence=SEQUENCE,
         gate=DEFAULT_IOU_GATE,
@@ -139,11 +136,10 @@ def main() -> int:
         materiality=verdict, ordering=s, reason_codes=[]))
     print(f"\ncertificate sha256: {h[:16]}...  reproducible: {h == again}")
 
-    print("\nWhat this shows: two of the three filled gaps are geometrically")
-    print("plausible and fully scoreable, yet the reference does not support")
-    print("them — one bridges an identity change, one has no reference at the")
-    print("filled frame. The evaluator cannot see that difference; the audit can.")
-    print(f"\n  {CLASS_MEANING['ANCHOR_ID_MISMATCH']}")
+    print("\nsummary:")
+    print("  one synthesized row is admitted")
+    print("  one spans different reference identities")
+    print("  one has no reference support at the filled frame")
     return 0
 
 

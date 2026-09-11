@@ -1,11 +1,7 @@
-"""Canonical row identity for multi-object tracking states.
+"""Canonical row identities and parsing utilities for tracking states.
 
-A tracking state is a set of rows. Each row is identified by
-``(sequence, frame, track_id)`` and carries a box plus optional trailing fields.
-Identity is deliberately narrow: two rows with the same identity are the same
-row even if their coordinates differ, which is what lets a state difference be
-expressed as insertions, deletions and coordinate rewrites rather than as an
-unstructured diff.
+Rows are keyed by (sequence, frame, track_id). Coordinate changes under the
+same key are treated as rewrites.
 """
 from __future__ import annotations
 

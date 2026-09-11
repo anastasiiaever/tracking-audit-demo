@@ -1,10 +1,4 @@
-"""A deterministic, hashable audit certificate.
-
-Two runs over the same inputs must produce byte-identical output, so the record
-can be hashed and compared rather than eyeballed. That rules out anything
-non-deterministic in the hashed content — most obviously a clock reading, which
-belongs outside it.
-"""
+"""Deterministic audit records and SHA-256 content hashes."""
 from __future__ import annotations
 
 import hashlib

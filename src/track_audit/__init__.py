@@ -1,25 +1,4 @@
-"""A small audit for post-processed multi-object tracking submissions.
-
-A tracking submission is not the same object as the tracker's output. Between
-them sits post-processing — gap filling, tracklet linking, smoothing — that
-inserts rows the tracker never observed. An evaluator scores those rows exactly
-like observed ones and cannot tell them apart.
-
-This package can:
-
-* :mod:`~track_audit.rows` — canonical row identity and parsing
-* :mod:`~track_audit.transitions` — what changed between two states, and whether
-  the change is row-additive at all
-* :mod:`~track_audit.admission` — whether each synthesized row describes a
-  continuous reference object, under a gate applied before assignment
-* :mod:`~track_audit.states` — the observed / admitted / submitted triple
-* :mod:`~track_audit.ordering` — how pairwise system orderings move between states
-* :mod:`~track_audit.materiality` — a descriptive size rule with its companion rate
-* :mod:`~track_audit.certificate` — a deterministic, hashable record of a run
-
-It is an evaluation artifact: it introduces no metric and no post-processing
-operator, and it ranks nothing on its own.
-"""
+"""Utilities for auditing post-processed multi-object tracking outputs."""
 from .admission import (ADMITTED, ANCHOR_ID_MISMATCH, ANCHOR_UNMATCHED, CLASSES,
                         DEFAULT_IOU_GATE, TARGET_REFERENCE_ABSENT,
                         assign_reference, classify, partition_counts)

@@ -3,22 +3,17 @@
 A small, self-contained audit for **post-processed multi-object tracking
 submissions**, with a synthetic worked example and a focused test suite.
 
-> **Scope.** This is a standalone research code sample built on **synthetic
-> inputs only**. It contains no unpublished experimental results, no manuscript
-> artifacts, no datasets and no model weights. Every number any command here
-> prints is computed from strings defined in this repository.
+> **Scope.** This repository uses synthetic inputs only. It contains no datasets,
+> model weights, or experimental results.
 
 ## The problem it addresses
 
-A tracking submission is not the same object as the tracker's output. Between
-them sits post-processing — gap filling, tracklet linking, smoothing — that
-inserts rows the tracker never observed. An evaluator scores those rows exactly
-like observed ones and cannot tell them apart.
+Post-processing such as gap filling, tracklet linking, or smoothing can add rows
+that were not present in the original tracker output. Standard evaluation scores
+these rows together with the observed rows.
 
-So a submission carries two kinds of row, and the usual metric reports one
-number over both. This package separates them and asks a question the evaluator
-does not: for each inserted row, does a reference actually support the claim
-that it describes one continuous object?
+This package separates the two and checks whether synthesized rows are supported
+by a reference trajectory.
 
 ## What is here
 
@@ -74,10 +69,10 @@ classify(synthesized, list(observed.values()), reference)
 Change the reference so the track's two anchors resolve to *different*
 identities, and the same row becomes `ANCHOR_ID_MISMATCH`: the gap was bridged
 across an identity change, and the interpolated row does not describe one
-continuous object. The evaluator's score does not move; the audit's verdict
-does.
+continuous object. The metric input is unchanged, while the admission class
+changes.
 
-## Design decisions worth reading the code for
+## Implementation notes
 
 **The gate is applied before assignment.** The IoU gate is a hard admissibility
 mask on the cost matrix, not a filter over the winning pairs. That makes the
@@ -94,8 +89,8 @@ with one unresolvable anchor is never *also* counted as a mismatch.
 
 **Non-admission is not error.** `ANCHOR_UNMATCHED` says a matching rule did not
 resolve, which can happen because the tracker was wrong *or* because the matcher
-was strict. The evidence does not separate those, and `CLASS_MEANING` says so in
-the code rather than leaving it to a reader's charity.
+was strict. The evidence does not distinguish those cases; `CLASS_MEANING`
+records that limitation explicitly.
 
 **Ambiguous attribution is reported, not resolved.** Because row identity
 contains the track id, an id change surfaces as a deletion plus an insertion.
@@ -103,13 +98,13 @@ Pairing them is only licensed when exactly one of each occurs at the same frame
 with identical geometry; every other configuration is counted as ambiguous
 rather than resolved by a heuristic.
 
-**Some operators have no intermediate state at all.** An operator that rewrites
+**Non-row-additive operators.** An operator that rewrites
 values its own fit consumes has no row-subset decomposition — removing a subset
 of the rows it produced would change the rows it kept. `assert_row_additive`
 raises, and `states.undefined_for_non_row_additive` returns
 `STRUCTURALLY_UNDEFINED` with a reason instead of synthesizing a number.
 
-**Both denominators, always.** A large non-admitted fraction *of the inserted
+**Two denominators.** A large non-admitted fraction *of the inserted
 rows* is a different statement from a large fraction *of the submission*.
 `materiality.classify` returns both, and an empty denominator yields `UNDEFINED`
 rather than `0.0`.

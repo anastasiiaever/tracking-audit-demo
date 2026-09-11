@@ -1,12 +1,7 @@
-"""Pairwise ordering between systems, and how it moves between two states.
+"""Pairwise ordering changes between two metric states.
 
-Two systems can be compared only within one dataset, one population, one
-evaluator configuration and one metric. Given metric tables for two states, this
-module reports the relation for *every* eligible pair on *every* metric — not
-only the pairs that change — and classifies how each relation moves.
-
-Reporting all cells is the point: "post-processing reversed three orderings" is
-only interpretable next to how many orderings there were.
+All eligible system pairs and metrics are reported, including unchanged
+relations.
 """
 from __future__ import annotations
 

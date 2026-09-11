@@ -1,13 +1,6 @@
-"""A descriptive size classification for a composition, with its companion rate.
+"""Descriptive size classification for non-admitted synthesized rows.
 
-The rule is deliberately small: a composition is called *material* when the
-non-admitted fraction of the synthesized rows reaches a threshold fixed in
-advance. It carries no significance claim and no generalisation.
-
-The denominator matters. A large fraction *of the synthesized rows* is not the
-same statement as a large fraction *of the submission*, and quoting the first
-without the second invites the second to be read into it. Both are always
-returned together.
+Both the synthesized-row rate and the submission-wide rate are returned.
 """
 from __future__ import annotations
 

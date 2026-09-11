@@ -1,22 +1,8 @@
-"""Admission: does a synthesized row describe a continuous reference object?
+"""Reference-consistency checks for synthesized tracking rows.
 
-Post-processing inserts rows a tracker never observed. An evaluator scores those
-rows exactly like observed ones and cannot tell them apart. This module can: for
-each synthesized row it takes the two bracketing observed rows of the same
-track, resolves each against a reference under a frozen matcher, and asks
-whether both resolve to the *same* reference identity, and whether that identity
-is present at the synthesized row's own frame.
-
-Two properties matter and are easy to get wrong.
-
-**The gate is applied before assignment.** The IoU gate is a hard admissibility
-mask, not a filter applied to the winning pairs afterwards. A pair below the
-gate cannot consume an assignment slot, so raising the gate never *creates* a
-match that a lower gate refused.
-
-**The reference assignment is computed on the observed state only**, before any
-synthesized row exists, and is then frozen. Assigning after insertion would let
-the rows under test influence the reference they are tested against.
+Each synthesized row is evaluated using its bracketing observed rows.
+Reference assignment is computed from the observed state, with the IoU gate
+applied before assignment.
 """
 from __future__ import annotations
 

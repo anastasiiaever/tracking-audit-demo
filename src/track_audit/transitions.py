@@ -1,10 +1,7 @@
-"""What changed between two tracking states, stated explicitly.
+"""State differences for tracking outputs.
 
-The difference between an observed state and a submitted state is expressed as
-insertions, deletions and coordinate rewrites over canonical row identities.
-Nothing is inferred from frame gaps: a row counts as synthesized because it is
-present in one state and absent from the other, never because its frame index
-"looks interpolated".
+Differences are represented as insertions, deletions, and coordinate rewrites
+over canonical row identities. No gap-based inference is used.
 """
 from __future__ import annotations
 
@@ -37,17 +34,7 @@ class Transitions:
 
 
 def inventory(observed: Dict[RowId, Row], submitted: Dict[RowId, Row]) -> Transitions:
-    """Inventory the state difference.
-
-    Because canonical row identity contains the track id, a track-id change
-    cannot be observed *within* one identity — it surfaces as a deletion plus an
-    insertion. Pairing those two into "one row was renamed" is only licensed
-    when it is unambiguous: exactly one deletion and exactly one insertion at
-    the same ``(sequence, frame)``, with identical coordinates. Every other
-    configuration is reported as ambiguous rather than resolved by a heuristic,
-    because inventing a correspondence would manufacture a fact the states do
-    not contain.
-    """
+    """Inventory state changes and conservatively attribute unambiguous ID rewrites."""
     inserted = sorted(set(submitted) - set(observed))
     deleted = sorted(set(observed) - set(submitted))
     common = sorted(set(observed) & set(submitted))
